@@ -35,7 +35,6 @@
 
   <body>
     <div class="reveal">
-      <!-- Any section element inside of this container is displayed as a slide -->
       <div class="slides">
         <section>
           <h1>Strangeloop 2015</h1>
@@ -57,6 +56,26 @@
             <li>Building a Processor</li>
             <li>Wrap-Up</li>
           </ul>
+        </section>
+
+        <section>
+          <h2>Setup</h2>
+        </section>
+
+        <section>
+          <h2>Build a Redis container</h2>
+          <pre>
+            <code data-trim class="nohighlight">
+$ docker run --name repsheet-redis -d redis
+$ docker run -it --link repsheet-redis:redis --rm redis \
+  sh -c 'exec redis-cli -h "$REDIS_PORT_6379_TCP_ADDR"  \
+  -p "$REDIS_PORT_6379_TCP_PORT"'
+
+172.17.0.1:6379> keys *
+(empty list or set)
+172.17.0.1:6379>
+            </code>
+          </pre>
         </section>
 
         <section style="text-align: left;">

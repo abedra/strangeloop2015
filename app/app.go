@@ -4,8 +4,10 @@ import (
 	"log"
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/handlers"
 	"html/template"
 	"net/http"
+	"os"
 )
 
 type Page struct {
@@ -25,7 +27,7 @@ func LoginHandler(response http.ResponseWriter, request *http.Request) {
 
 func main() {
 	r := mux.NewRouter()
-	r.HandleFunc("/", LoginHandler)
+	r.Handle("/", handlers.LoggingHandler(os.Stdout, http.HandlerFunc(LoginHandler)))
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.Handle("/", r)
 

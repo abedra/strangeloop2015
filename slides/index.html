@@ -63,25 +63,100 @@
         </section>
 
         <section>
-          <h2>Build a Redis container</h2>
+          <h2>Build and install hiredis</h2>
           <pre>
             <code data-trim class="nohighlight">
-$ docker run --name repsheet-redis -d redis
-$ docker run -it --link repsheet-redis:redis --rm redis \
-  sh -c 'exec redis-cli -h "$REDIS_PORT_6379_TCP_ADDR"  \
-  -p "$REDIS_PORT_6379_TCP_PORT"'
-
-172.17.0.1:6379> keys *
-(empty list or set)
-172.17.0.1:6379>
+$ cd repsheet/hiredis
+$ make
+$ sudo PREFIX=/usr make install
+$ sudo ldconfig # if you are on linux
             </code>
           </pre>
         </section>
 
+        <section>
+          <h2>Build and install librepsheet</h2>
+          <pre>
+            <code data-trim class="nohighlight">
+$ cd repsheet/librepsheet
+$ ./autogen.sh
+$ ./configure --prefix=/usr
+$ make
+$ make check # all tests should pass
+$ sudo make install
+$ sudo ldconfig # if you are on linux
+            </code>
+          </pre>
+        </section>
+
+        <section>
+          <h2>Build and install NGINX with the repsheet module</h2>
+          <pre>
+            <code data-trim class="nohighlight">
+$ cd repsheet/repsheet-nginx
+$ bundle # if you want to run the tests
+$ script/bootstrap
+$ rake # all tests should pass
+            </code>
+          </pre>
+        </section>
+
+	<section>
+	  <h2>Repsheet</h2>
+	</section>
+
+	<section>
+	  <h2>User behavior</h2>
+	</section>
+
+	<section data-background="casino.jpeg" data-background-size="1100px">
+
+	</section>
+
+	<section>
+	  <h2>Our web systems are not fortresses</h2>
+	</section>
+
+	<section>
+	  <h2>And our responses shouldn't be static</h2>
+	</section>
+
+	<section>
+	  <h2>Example</h2>
+	  <pre>
+	    <code data-trim class="conf">
+location / {
+  # block one workstation
+  deny    192.168.1.1;
+  # allow anyone in 192.168.1.0/24
+  allow   192.168.1.0/24;
+  # drop rest of the world
+  deny    all;
+}
+	    </code>
+	  </pre>
+	</section>
+
+	<section>
+	  <h2>This doesn't scale</h2>
+	</section>
+
+	<section>
+	  <h2>And it makes operations much harder</h2>
+	</section>
+
+	<section>
+	  <h2>It also doesn't allow you to change your response according to the actor's behavior</h2>
+	</section>
+
+	<section>
+	  <h2>Repsheet gives you more fluid options for dealing with bad actors</h2>
+	</section>
+
         <section style="text-align: left;">
-          <h1>Thanks!</h1>
+          <h1>References</h1>
           <p>
-            - <a href="https://github.com/repsheet">Repsheet on Github</a> <br>
+            - <a href="https://github.com/repsheet">https://github.com/repsheet</a> <br>
           </p>
         </section>
       </div>

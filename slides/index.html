@@ -267,8 +267,7 @@ $ curl localhost:8888
 	  <h2>Let's pretend we're malicious</h2>
 	  <pre>
 	    <code data-trim class="nohighlight">
-$ redis-cli
-127.0.0.1:6379&gt; set 127.0.0.1:repsheet:ip:blacklisted manual
+$ redis-cli set 127.0.0.1:repsheet:ip:blacklisted manual
 OK
             </code>
 	  </pre>
@@ -286,6 +285,62 @@ $ curl localhost:8888
 &lt;hr&gt;&lt;center&gt;nginx/1.8.0&lt;/center&gt;
 &lt;/body&gt;
 &lt;/html&gt;
+	    </code>
+	  </pre>
+	</section>
+
+	<section>
+	  <h2>We can also change our mind</h2>
+	  <pre>
+	    <code data-trim class="nohighlight">
+$ redis-cli set 127.0.0.1:repsheet:ip:whitelisted manual
+OK
+$ curl -I localhost:8888
+HTTP/1.1 200 OK
+Server: nginx/1.8.0
+Date: Tue, 22 Sep 2015 19:58:14 GMT
+Content-Type: text/plain; charset=utf-8
+Connection: keep-alive
+	    </code>
+	  </pre>
+	</section>
+
+	<section>
+	  <h2>Let's take a look at the logs</h2>
+	  <pre>
+	    <code data-trim class="nohighlight">
+$ tail build/nginx/logs/error.log
+2015/09/22 14:53:01 [error] 58985#0: *4 [Repsheet] - IP 127.0.0.1
+  was blocked by repsheet. Reason: manual, client: 127.0.0.1,
+  server: , request: "GET / HTTP/1.1", host: "localhost:8888"
+2015/09/22 14:53:04 [error] 58985#0: *4 [Repsheet] - IP 127.0.0.1
+  is whitelisted by repsheet. Reason: manual, client: 127.0.0.1,
+  server: , request: "GET / HTTP/1.1", host: "localhost:8888"
+	    </code>
+	  </pre>
+	</section>
+
+	<section>
+	  <h2>We can also be a little unsure</h2>
+	  <pre>
+	    <code data-trim class="nohighlight">
+$ redis-cli flushdb
+OK
+$ redis-cli set 127.0.0.1:repsheet:ip:marked manual
+OK
+$ curl localhost:8888 # you should see the normal response
+	    </code>
+	  </pre>
+	</section>
+
+	<section>
+	  <h2>But under the hood</h2>
+	  <pre>
+	    <code data-trim class="nohighlight">
+# NGINX logs
+2015/09/22 16:16:34 [error] 58985#0: *21 [Repsheet] - IP 127.0.0.1 was found on repsheet. No action taken, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8888"
+# app logs
+
 	    </code>
 	  </pre>
 	</section>

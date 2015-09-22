@@ -51,13 +51,19 @@ func AdminHandler(response http.ResponseWriter, request *http.Request) {
 }
 
 func main() {
+	logFile, err := os.OpenFile("logs/app.log", os.O_WRONLY | os.O_CREATE | os.O_APPEND, 0666)
+	if err != nil {
+		fmt.Println("Error accessing log file:", err)
+		os.Exit(1)
+	}
+
         r := mux.NewRouter()
-        r.Handle("/", handlers.LoggingHandler(os.Stdout, http.HandlerFunc(LoginHandler)))
-        r.Handle("/admin", handlers.LoggingHandler(os.Stdout, http.HandlerFunc(AdminHandler)))
+        r.Handle("/", handlers.LoggingHandler(logFile, http.HandlerFunc(LoginHandler)))
+        r.Handle("/admin", handlers.LoggingHandler(logFile, http.HandlerFunc(AdminHandler)))
         r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
         http.Handle("/", r)
 
-        err := http.ListenAndServe("localhost:8080", r)
+        err = http.ListenAndServe("localhost:8080", r)
         if err != nil {
                 log.Fatal("Error starting server: ", err)
         }

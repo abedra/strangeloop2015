@@ -182,17 +182,17 @@ location / {
 	  <h2>Options</h2>
 	  <pre>
 	    <code data-trim class="conf">
-repsheet on;
-repsheet_user_lookup on;
-repsheet_ip_lookup on;
+repsheet on;                          # main or location conf
+repsheet_user_lookup on;              # main conf
+repsheet_ip_lookup on;                # main conf
 
-repsheet_redis_host localhost;
-repsheet_redis_port 6379;
-repsheet_redis_connection_timeout 5;
-repsheet_redis_read_timeout 10;
+repsheet_redis_host localhost;        # main conf
+repsheet_redis_port 6379; # main conf
+repsheet_redis_connection_timeout 5;  # main conf
+repsheet_redis_read_timeout 10;       # main conf
 
-repsheet_proxy_headers on;
-repsheet_user_cookie "user";
+repsheet_proxy_headers on;            # main conf
+repsheet_user_cookie "user";          # main conf
 	    </code>
 	  </pre>
 	</section>
@@ -201,12 +201,37 @@ repsheet_user_cookie "user";
 	  <h2>A full configuration is provided in the repsheet-nginx repository</h2>
 	</section>
 
+	<section>
+	  <h2>A basic repsheet environment</h2>
+	</section>
+
+	<section>
+	  <h2>You can use your own application or the sample application provided</h2>
+	</section>
+
+	<section>
+	  <h2>Booting up the sample application</h2>
+	  <pre>
+	    <code data-trim class="nohighlight">
+$ cd app
+$ go run app.go
+$ curl localhost:8080
+curl localhost:8080
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  ... elided ...
+&lt;/html&gt;
+	    </code>
+	  </pre>
+	</section>
+
         <section style="text-align: left;">
           <h1>References</h1>
           <p>
             - <a href="https://github.com/repsheet">https://github.com/repsheet</a> <br>
           </p>
         </section>
+
       </div>
     </div>
 

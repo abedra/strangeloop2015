@@ -213,13 +213,78 @@ repsheet_user_cookie "user";          # main conf
 	  <h2>Booting up the sample application</h2>
 	  <pre>
 	    <code data-trim class="nohighlight">
+$ go get github.com/tools/godep
 $ cd app
-$ go run app.go
+$ godep go run app.go
 $ curl localhost:8080
 curl localhost:8080
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;
   ... elided ...
+&lt;/html&gt;
+	    </code>
+	  </pre>
+	</section>
+
+	<section>
+	  <h2>Take a look at the log file</h2>
+	  <pre>
+	    <code data-trim class="nohighlight">
+$ tail -f logs/app.log
+127.0.0.1 - - [22/Sep/2015:09:49:50 -0500] "GET / HTTP/1.1" 200 1400
+	    </code>
+	  </pre>
+	</section>
+
+	<section>
+	  <h2>Putting the app behind NGINX</h2>
+	  <pre>
+	    <code data-trim class="conf">
+# http section
+upstream app {
+  server localhost:8080;
+}
+
+# server section
+location / {
+  proxy_pass http://app
+}
+	    </code>
+	  </pre>
+	</section>
+
+	<section>
+	  <h2>Reload the NGINX config and try against the NGINX port</h2>
+	  <pre>
+	    <code data-trim class="nohighlight">
+$ build/nginx/sbin/nginx -s reload
+$ curl localhost:8888
+	    </code>
+	  </pre>
+	</section>
+
+	<section>
+	  <h2>Let's pretend we're malicious</h2>
+	  <pre>
+	    <code data-trim class="nohighlight">
+$ redis-cli
+127.0.0.1:6379&gt; set 127.0.0.1:repsheet:ip:blacklisted manual
+OK
+            </code>
+	  </pre>
+        </section>
+
+	<section>
+	  <h2>We can see that things have changed</h2>
+	  <pre>
+	    <code data-trim class="nohighlight">
+$ curl localhost:8888
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;403 Forbidden&lt;/title&gt;&lt;/head&gt;
+&lt;body bgcolor="white"&gt;
+&lt;center&gt;&lt;h1&gt;403 Forbidden&lt;/h1&gt;&lt;/center&gt;
+&lt;hr&gt;&lt;center&gt;nginx/1.8.0&lt;/center&gt;
+&lt;/body&gt;
 &lt;/html&gt;
 	    </code>
 	  </pre>

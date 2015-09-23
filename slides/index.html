@@ -386,6 +386,44 @@ func repsheetHandler(next http.Handler) http.Handler {
 	</section>
 
 	<section>
+	  <h2>There's also a repsheet command line tool</h2>
+	</section>
+
+	<section>
+	  <h2>Example</h2>
+	  <pre>
+	    <code data-trim class="nohighlight">
+$ cd repsheet/repsheet-0.0.1
+$ go build repsheeet.go
+$ ./repsheet -list
+blacklisted actors
+whitelisted actors
+marked actors
+  127.0.0.1
+	    </code>
+	  </pre>
+	</section>
+
+	<section>
+	  <h2>Use -h to see the capabilities</h2>
+	  <pre>
+	    <code data-trim class="nohighlight">
+$ ./repsheet -h
+Usage of ./repsheet:
+  -blacklist="": Blacklist an actor
+  -host="localhost": Redis host
+  -list=false: Show the contents of Repsheet
+  -mark="": Mark an actor
+  -port=6379: Redis port
+  -reason="": Reason for the action
+  -status="": Get the status of an actor
+  -timeout=10: Redis connection timeout
+  -whitelist="": Whitelist an actor
+	    </code>
+	  </pre>
+	</section>
+
+	<section>
 	  <h2>Everything you've done so far is all manual</h2>
 	</section>
 

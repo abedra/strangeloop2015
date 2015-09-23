@@ -42,6 +42,16 @@ fetch_repsheet_nginx() {
     printf "$GREEN[done]$RESET\n"
 }
 
+fetch_repsheet() {
+    printf "Fetching repsheet ... "
+    pushd repsheet > /dev/null 2>&1
+    curl -s -O -L https://github.com/repsheet/repsheet/archive/0.0.1.tar.gz
+    tar xzf 0.0.1.tar.gz
+    rm 0.0.1.tar.gz
+    popd > /dev/null 2>&1
+    printf "$GREEN[done]$RESET\n"
+}
+
 clean() {
     rm -rf repsheet
 }
@@ -55,4 +65,5 @@ else
     fetch_hiredis
     fetch_librepsheet
     fetch_repsheet_nginx
+    fetch_repsheet
 fi

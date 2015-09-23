@@ -29,6 +29,11 @@
             <input type="checkbox" value="remember-me"> Remember me
           </label>
         </div>
+	{{ if .Repsheet }}
+	<div>
+	  <p>Actor is marked</p>
+	</div>
+	{{ end }}
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
       </form>
     </div>

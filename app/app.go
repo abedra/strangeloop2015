@@ -5,6 +5,7 @@ import (
         "fmt"
         "github.com/gorilla/mux"
         "github.com/gorilla/handlers"
+	"github.com/gorilla/context"
         "html/template"
         "net/http"
         "os"
@@ -13,9 +14,19 @@ import (
 type Page struct {
         Title string
         Error string
+	Repsheet bool
 }
 
 var templates = template.Must(template.ParseFiles("index.html", "admin.html"))
+
+func repsheetHandler(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Header["X-Repsheet"] != nil {
+			context.Set(r, "repsheet", true)
+		}
+		next.ServeHTTP(w, r)
+	})
+}
 
 func LoginHandler(response http.ResponseWriter, request *http.Request) {
         if (request.Method == "GET") {
@@ -24,7 +35,14 @@ func LoginHandler(response http.ResponseWriter, request *http.Request) {
                 if err != nil {
                         http.Error(response, fmt.Sprintf("error parsing url %v", err), 500)
                 }
-                templates.ExecuteTemplate(response, "index.html", Page{Title: "Login"})
+
+		page := Page{Title: "Login"}
+
+		if context.Get(request, "repsheet") != nil {
+			page.Repsheet = true
+		}
+
+                templates.ExecuteTemplate(response, "index.html", page)
         } else if (request.Method == "POST") {
                 request.ParseForm()
                 username := request.PostFormValue("inputEmail")
@@ -58,8 +76,8 @@ func main() {
 	}
 
         r := mux.NewRouter()
-        r.Handle("/", handlers.LoggingHandler(logFile, http.HandlerFunc(LoginHandler)))
-        r.Handle("/admin", handlers.LoggingHandler(logFile, http.HandlerFunc(AdminHandler)))
+        r.Handle("/", handlers.LoggingHandler(logFile, repsheetHandler(http.HandlerFunc(LoginHandler))))
+        r.Handle("/admin", handlers.LoggingHandler(logFile, repsheetHandler(http.HandlerFunc(AdminHandler))))
         r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
         http.Handle("/", r)
 

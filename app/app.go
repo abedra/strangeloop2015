@@ -76,8 +76,8 @@ func main() {
 	}
 
         r := mux.NewRouter()
-        r.Handle("/", handlers.LoggingHandler(logFile, repsheetHandler(http.HandlerFunc(LoginHandler))))
-        r.Handle("/admin", handlers.LoggingHandler(logFile, repsheetHandler(http.HandlerFunc(AdminHandler))))
+        r.Handle("/", handlers.ProxyHeaders(handlers.LoggingHandler(logFile, repsheetHandler(http.HandlerFunc(LoginHandler)))))
+        r.Handle("/admin", handlers.ProxyHeaders(handlers.LoggingHandler(logFile, repsheetHandler(http.HandlerFunc(AdminHandler)))))
         r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
         http.Handle("/", r)
 

@@ -345,6 +345,39 @@ $ curl localhost:8888 # you should see the normal response
 	  </pre>
 	</section>
 
+	<section>
+	  <h2>The repsheet module passes a header to the downstream applicaions indicating a marked actor</h2>
+	</section>
+
+	<section>
+	  <h2>example</h2>
+	  <pre>
+	    <code data-trim class="go">
+func repsheetHandler(next http.Handler) http.Handler {
+                return http.HandlerFunc(func(w http.ResponseWriter,
+                                             r *http.Request) {
+		if r.Header["X-Repsheet"] != nil {
+			context.Set(r, "repsheet", true)
+		}
+		next.ServeHTTP(w, r)
+	})
+}
+	    </code>
+	  </pre>
+	</section>
+
+	<section>
+	  <h2>If you look at the sample application you will notice a message indicating you are marked</h2>
+	</section>
+
+	<section>
+	  <h2>Obviously you wouldn't show that message directly</h2>
+	</section>
+
+	<section>
+	  <h2>Exercise: Make a better marked response</h2>
+	</section>
+
         <section style="text-align: left;">
           <h1>References</h1>
           <p>

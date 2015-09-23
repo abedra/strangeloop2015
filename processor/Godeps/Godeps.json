@@ -1,0 +1,11 @@
+{
+	"ImportPath": "github.com/abedra/strangeloop2015/processor",
+	"GoVersion": "go1.5.1",
+	"Deps": [
+		{
+			"ImportPath": "github.com/fzzy/radix/redis",
+			"Comment": "v0.5.6-2-g3528e87",
+			"Rev": "3528e87a910c6730810cec1be187f989d7d9442a"
+		}
+	]
+}

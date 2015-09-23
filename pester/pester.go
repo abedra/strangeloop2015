@@ -75,8 +75,7 @@ func main() {
 	hostPtr := flag.String("host", "", "Set the host")
 	portPtr := flag.Int("port", 80, "Set the port")
 	fromPtr := flag.String("from", "", "Set the X-Forwarded-For header")
-
-	loginAttackPtr := flag.String("loginAttack", "", "Hit the login endpoint of an application")
+	loginAttackPtr := flag.String("attack", "", "Hit the login endpoint of an application")
 
 	flag.Parse()
 

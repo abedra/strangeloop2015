@@ -157,8 +157,8 @@ location / {
 	  <h2>How does it work?</h2>
 	</section>
 
-	<section>
-	  <h2>todo: image</h2>
+	<section data-background="repsheet.png" data-background-size="1024px">
+
 	</section>
 
 	<section>
@@ -338,15 +338,15 @@ $ curl localhost:8888 # you should see the normal response
 	  <pre>
 	    <code data-trim class="nohighlight">
 # NGINX logs
-2015/09/22 16:16:34 [error] 58985#0: *21 [Repsheet] - IP 127.0.0.1 was found on repsheet. No action taken, client: 127.0.0.1, server: , request: "GET / HTTP/1.1", host: "localhost:8888"
-# app logs
-
+2015/09/22 16:16:34 [error] 58985#0: *21 [Repsheet] - IP 127.0.0.1
+  was found on repsheet. No action taken, client: 127.0.0.1, server: ,
+  request: "GET / HTTP/1.1", host: "localhost:8888"
 	    </code>
 	  </pre>
 	</section>
 
 	<section>
-	  <h2>The repsheet module passes a header to the downstream applicaions indicating a marked actor</h2>
+	  <h2>The repsheet module passes a header to the downstream applications indicating a marked actor</h2>
 	</section>
 
 	<section>
@@ -390,11 +390,53 @@ func repsheetHandler(next http.Handler) http.Handler {
 	  <h2>So let's build some!</h2>
 	</section>
 
+	<section>
+	  <h2>First, let's do a login attack</h2>
+	  <pre>
+	    <code data-trim class="nohighlight">
+$ cd pester
+$ go build pester.go
+$ ./pester -host localhost -port 8888 -loginAttack /
+Starting login attack on http://localhost:8888/
+The password is: P4$$w0rd!
+	    </code>
+	  </pre>
+	</section>
+
+	<section>
+	  <h2>This will generate enough log data to disect</h2>
+	</section>
+
+	<section>
+	  <h2>Exercise: write a log parser that detects login attacks</h2>
+	</section>
+
+	<section>
+	  <h2>Wrap Up</h2>
+	</section>
+
+	<section>
+	  <h2>This is just the beginning</h2>
+	</section>
+
+	<section>
+	  <h2>In reality you need much more powerful detection capabilities</h2>
+	</section>
+
+	<section>
+	  <h2>This is a great place for the application of machine learning</h2>
+	</section>
+
+	<section>
+	  <h2>A note on scalability</h2>
+	</section>
+
+	<section>
+	  <h2>Where do you go from here?</h2>
+	</section>
+
         <section style="text-align: left;">
-          <h1>References</h1>
-          <p>
-            - <a href="https://github.com/repsheet">https://github.com/repsheet</a> <br>
-          </p>
+          <h1>Questions?</h1>
         </section>
 
       </div>

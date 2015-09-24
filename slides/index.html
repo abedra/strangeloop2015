@@ -102,7 +102,7 @@ $ sudo ldconfig # if you are on linux
           <h2>Build and install NGINX with the repsheet module</h2>
           <pre>
             <code data-trim class="nohighlight">
-$ cd repsheet/repsheet-nginx
+$ cd repsheet/repsheet-nginx-3.1.3
 $ bundle # if you want to run the tests
 $ script/bootstrap
 $ rake # all tests should pass
@@ -305,7 +305,7 @@ $ curl localhost:8888
 	    <code data-trim class="nohighlight">
 $ redis-cli set 127.0.0.1:repsheet:ip:whitelisted manual
 OK
-$ curl -I localhost:8888 # Normal app output
+$ curl localhost:8888 # Normal app output
 	    </code>
 	  </pre>
 	</section>
